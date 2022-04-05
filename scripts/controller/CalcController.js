@@ -27,11 +27,27 @@ class CalcController{
         });
     }
 
+    //Limpar tudo e limpar última entrada
+
     clearAll(){
         this._operation=[];
     }
     clearEntry(){
         this._operation.pop()
+    }
+
+    //Processamento de operadores/números
+
+    pushOperation(value){
+        this._operation(value);
+        if (this._operation.length>3){
+            this.calc();
+        }
+    }
+    calc(){
+        let last = this._operation.pop();
+        let res = eval(this._operation.join(""));
+        this._operation=[result, last];
     }
     isOperator(value){
 
@@ -39,14 +55,12 @@ class CalcController{
         //indexOf faz uma verificação do array, identifica o operador e retorna o index relacionado
 
     }
-
     getLastOperation(){
         return this._operation[this._operation.length-1];
     }
     setLastOperation(value){
         this._operation[this._operation.length-1]=value;
     }
-
     addOperation(value){
         if(isNaN(this.getLastOperation())){
             //Strings 
@@ -57,19 +71,22 @@ class CalcController{
                 //Outra coisa
                 console.log(value);
             }else{
-                this._operation.push(value);
+                this.pushOperation(value);
+                this.setLastNumberToDisplay();
             }
         }
         else{
             //Numbers
             if(this.isOperator(value)){
-                this._operation.push(value);
+                this.pushOperation(value);
             }
             let newValue = this.getLastOperation().toString()+value.toString();
             this.setLastOperation(parseInt(newValue));
+
+            //Atualização do Display
+
+            this.setLastNumberToDisplay();
         }
-        this._operation.push(value);
-        console.log(this._operation);
     }
 
     setError(){
@@ -124,6 +141,8 @@ class CalcController{
         }
     };
 
+    //Processamento do Display e Botões
+
     initButtonsEvents(){
 
         let buttons = document.querySelectorAll("#buttons > g, #parts > g");
@@ -144,6 +163,17 @@ class CalcController{
             year: "numeric"
         });
         this.displayTime=this.currentDate.toLocaleTimeString(this._locale);
+    }
+    setLastNumberToDisplay(){
+        let lastNumber;
+
+        for(let i=this._operation.length-1; i>=0; i--){
+            if(!this.isOperator(this._operation[i])){
+                lastNumber=this.operation[i];
+                break;
+            }
+        }
+        this.displayCalc=lastNumber;
     }
 
     get displayTime(){
