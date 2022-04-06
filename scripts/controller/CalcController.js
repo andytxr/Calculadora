@@ -47,7 +47,9 @@ class CalcController{
     calc(){
         let last = this._operation.pop();
         let res = eval(this._operation.join(""));
-        this._operation=[result, last];
+        this._operation=[res, last];
+
+        this.setLastNumberToDisplay();
     }
     isOperator(value){
 
@@ -62,8 +64,6 @@ class CalcController{
         this._operation[this._operation.length-1]=value;
     }
     addOperation(value){
-
-        console.log('A', isNaN(this.getLastOperation()));
 
         if(isNaN(this.getLastOperation())){
 
@@ -91,12 +91,9 @@ class CalcController{
 
                 let newValue = this.getLastOperation().toString()+value.toString();
                 this.setLastOperation(parseInt(newValue));
-
+                this.setLastNumberToDisplay(); //Update no display
             }
 
-            //Atualização do Display
-
-            this.setLastNumberToDisplay();
         }
     }
 
