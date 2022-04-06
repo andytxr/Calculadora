@@ -18,6 +18,7 @@ class CalcController{
         setInterval(() => {
             this.setDisplayDateTime();
         }, 1000);
+        this.setLastNumberToDisplay();
        
     }
 
@@ -31,9 +32,11 @@ class CalcController{
 
     clearAll(){
         this._operation=[];
+        this.setLastNumberToDisplay()
     }
     clearEntry(){
         this._operation.pop()
+        this.setLastNumberToDisplay()
     }
 
     //Processamento de operadores/números
@@ -45,15 +48,33 @@ class CalcController{
         }
     }
     calc(){
-        let last = this._operation.pop();
+
+        let last = '';
+
+        if(this._operation.length>3){
+            last = this._operation.pop();
+        }
         let res = eval(this._operation.join(""));
-        this._operation=[res, last];
+
+        // Calculando porcentagem
+
+        if (last == '%'){
+            res = res/100;
+            this._operation[res];
+        }
+        else{
+            this._operation=[res];
+
+            if(last){
+                this._operation.push(last);
+            }
+        }
 
         this.setLastNumberToDisplay();
     }
     isOperator(value){
 
-        return (['+','=','-','%','/'].indexOf(value) > -1);
+        return (['+','=','-','%','/','*'].indexOf(value) > -1);
         //indexOf faz uma verificação do array, identifica o operador e retorna o index relacionado
 
     }
@@ -126,7 +147,7 @@ class CalcController{
                 this.addOperation('%');
                 break;
             case 'igual':
-     
+                this.calc();
                 break;
             case 'ponto':
                 this.addOperation('.');
@@ -185,7 +206,11 @@ class CalcController{
                 break;
             }
         }
+        if(!lastNumber){
+            lastNumber=0;
+        }
         this.displayCalc=lastNumber;
+        
     }
     
 
