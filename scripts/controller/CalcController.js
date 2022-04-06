@@ -12,8 +12,11 @@ class CalcController{
         this._lastNumber='';
         this.initialize();
         this.initButtonsEvents();
+        this.initKeyboard();
 
     }
+
+    //Inicialização
 
     initialize(){
 
@@ -22,6 +25,67 @@ class CalcController{
         }, 1000);
         this.setLastNumberToDisplay();
        
+    }
+
+    initKeyboard(){
+
+        document.addEventListener('keyup', e=>{
+
+            switch(e.key){
+                case '0':
+                case '1':
+                case '2':
+                case '3':
+                case '4':
+                case '5':
+                case '6':
+                case '7':
+                case '8':
+                case '9':
+                    this.addOperation(parseInt(e.key));
+                    break;
+                case 'Escape':
+                    this.clearAll();
+                    break;
+                case 'Backspace':
+                    this.clearEntry();
+                    break;
+                case 'Enter':
+                    this.calc();
+                    break;
+                case '+':
+                case '-':
+                case '*':
+                case '/':
+                case '%':
+                case '=':
+                    this.addOperation(e.key);
+                    break;
+                case '.':
+                case ',':
+                    this.addDot();
+                
+            }
+
+        });
+
+    }
+
+    initButtonsEvents(){
+
+        let buttons = document.querySelectorAll("#buttons > g, #parts > g");
+
+        buttons.forEach((btn, index) => {
+
+            this.addEventListenerAll(btn,'click drag', e =>{
+                let textBtn = btn.className.baseVal.replace("btn-", "");
+                this.execBtn(textBtn);
+            })
+            this.addEventListenerAll(btn,'mouseover mouseup mousedown', e => {
+                btn.style.cursor="pointer";
+            })
+        });
+
     }
 
     addEventListenerAll(element, events, fn){
@@ -244,24 +308,7 @@ class CalcController{
         }
     };
 
-    //Processamento do Display e Botões
-
-    initButtonsEvents(){
-
-        let buttons = document.querySelectorAll("#buttons > g, #parts > g");
-
-        buttons.forEach((btn, index) => {
-
-            this.addEventListenerAll(btn,'click drag', e =>{
-                let textBtn = btn.className.baseVal.replace("btn-", "");
-                this.execBtn(textBtn);
-            })
-            this.addEventListenerAll(btn,'mouseover mouseup mousedown', e => {
-                btn.style.cursor="pointer";
-            })
-        });
-
-    }
+    //Processamento do Display
 
     setDisplayDateTime(){
 
