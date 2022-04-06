@@ -55,6 +55,7 @@ class CalcController{
 
         if(this._audioOnOff){
 
+            this._audio.currentTime=0;
             this._audio.play();
 
         }
@@ -63,6 +64,8 @@ class CalcController{
     initKeyboard(){
 
         document.addEventListener('keyup', e=>{
+
+            this.playAudio();
 
             switch(e.key){
                 case '0':
@@ -196,8 +199,13 @@ class CalcController{
 
     }
     getResult(){
-
-        return eval(this._operation.join(""));
+        try{
+            return eval(this._operation.join(""));
+        }
+        catch(e){
+            
+            this.setError();
+        }
 
     }
 
@@ -213,7 +221,7 @@ class CalcController{
 
         }
 
-        else if(this._operation.length>3){
+        if(this._operation.length>3){
 
             last = this._operation.pop();
             this._lastNumber = this.getResult();
@@ -226,7 +234,9 @@ class CalcController{
         }
 
         // Calculando porcentagem
+
         let res=this.getResult();
+
         if (last == '%'){
 
             res = res/100;
@@ -272,15 +282,20 @@ class CalcController{
 
             for(let i=this._operation.length-1; i>=0; i--){
    
-                if(this.isOperator(this._operation[i])==isOperator){
+                if(this.isOperator(this._operation[i])===isOperator){
                     lastItem=this._operation[i];
                     break;
                 }
     
             }
+
         if(!lastItem){
 
-            lastItem=(isOperator) ? this._lastOperator : this._lastNumber;
+            if (lastItem != 0) { 
+
+                lastItem = (isOperator) ? this._lastOperator : this._lastNumber;
+
+            }
 
             //lastItem=(isOperator) < Condição
             //? < Então se a Condição for verdadeira faça X coisa
@@ -329,6 +344,7 @@ class CalcController{
 
         }
     }
+
     addDot(){
 
         let lastOp = this.getLastOperation();
@@ -491,3 +507,4 @@ class CalcController{
     }
 
 }
+
