@@ -39,7 +39,7 @@ class CalcController{
     //Processamento de operadores/números
 
     pushOperation(value){
-        this._operation(value);
+        this._operation.push(value);
         if (this._operation.length>3){
             this.calc();
         }
@@ -62,26 +62,37 @@ class CalcController{
         this._operation[this._operation.length-1]=value;
     }
     addOperation(value){
+
+        console.log('A', isNaN(this.getLastOperation()));
+
         if(isNaN(this.getLastOperation())){
+
             //Strings 
             if(this.isOperator(value)){
                 //Trocar o operador
                 this.setLastOperation(value);
-            }else if(isNan(value)){
-                //Outra coisa
-                console.log(value);
+            }else if(isNaN(value)){
+                console.log("?")
             }else{
+
                 this.pushOperation(value);
                 this.setLastNumberToDisplay();
+                
             }
         }
         else{
+
             //Numbers
+
             if(this.isOperator(value)){
                 this.pushOperation(value);
             }
-            let newValue = this.getLastOperation().toString()+value.toString();
-            this.setLastOperation(parseInt(newValue));
+            else{
+
+                let newValue = this.getLastOperation().toString()+value.toString();
+                this.setLastOperation(parseInt(newValue));
+
+            }
 
             //Atualização do Display
 
@@ -149,12 +160,17 @@ class CalcController{
 
         buttons.forEach((btn, index) => {
 
-            this.addEventListenerAll(btn,'click drag mouseover', e =>{
-                console.log(btn.className.baseVal.replace("btn-",""));
+            this.addEventListenerAll(btn,'click drag', e =>{
+                let textBtn = btn.className.baseVal.replace("btn-", "");
+                this.execBtn(textBtn);
             })
-        })
+            this.addEventListenerAll(btn,'mouseover mouseup mousedown', e => {
+                btn.style.cursor="pointer";
+            })
+        });
 
-    };
+
+    }
 
     setDisplayDateTime(){
         this.displayDate=this.currentDate.toLocaleDateString(this._locale,{
@@ -166,15 +182,15 @@ class CalcController{
     }
     setLastNumberToDisplay(){
         let lastNumber;
-
         for(let i=this._operation.length-1; i>=0; i--){
             if(!this.isOperator(this._operation[i])){
-                lastNumber=this.operation[i];
+                lastNumber=this._operation[i];
                 break;
             }
         }
         this.displayCalc=lastNumber;
     }
+    
 
     get displayTime(){
         return this._timeEl.innerHTML;
