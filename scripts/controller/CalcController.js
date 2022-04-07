@@ -78,7 +78,7 @@ class CalcController{
                 case '7':
                 case '8':
                 case '9':
-                    this.addOperation(parseInt(e.key));
+                    this.addOperation(parseFloat(e.key));
                     break;
 
                 case 'Escape':
@@ -191,6 +191,7 @@ class CalcController{
     pushOperation(value){
 
         this._operation.push(value);
+        
         if (this._operation.length>3){
 
             this.calc();
@@ -204,16 +205,23 @@ class CalcController{
         }
         catch(e){
             
-            this.setError();
+            //TryCatch é parecido com TryParse, porém ao invés de tentar trocar o tipo da variável, ele vai tentar efetuar a operação.
+
+            setTimeout(()=>{
+
+                this.setError();
+
+            }, 1);
+
         }
 
-    }
+    }   //Try é utilizado para blocos sensíveis do código.
 
     calc(){
 
         let last = '';
         this._lastOperator = this.getLastItem();
-        
+        console.log(this._operation);
         if(this._operation.length<3){
 
             let firstItem=this._operation[0];
@@ -294,7 +302,7 @@ class CalcController{
             if (lastItem != 0) { 
 
                 lastItem = (isOperator) ? this._lastOperator : this._lastNumber;
-
+                this._operation.pop();
             }
 
             //lastItem=(isOperator) < Condição
@@ -424,7 +432,7 @@ class CalcController{
             case '7':
             case '8':
             case '9':
-                this.addOperation(parseInt(value));
+                this.addOperation(parseFloat(value));
                 break;
 
             default:
