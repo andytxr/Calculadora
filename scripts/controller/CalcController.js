@@ -214,7 +214,7 @@ class CalcController{
         let last = '';
         this._lastOperator = this.getLastItem();
         
-        if(this._operation.lengt<3){
+        if(this._operation.length<3){
 
             let firstItem=this._operation[0];
             this._operation=[firstItem,this._lastOperator,this._lastNumber];
